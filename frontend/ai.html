@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Student+ AI</title>
+
+  <link rel="stylesheet" href="../css/ai.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="site-header">
+
+    <div class="header-container">
+
+      <a href="index.html" class="logo">
+        <span class="logo-student">Student</span>
+        <span class="logo-plus">+</span>
+      </a>
+
+      <nav class="main-nav" id="mainNav">
+
+        <a href="index.html" class="nav-link">
+          Басты бет
+        </a>
+
+        <a href="frontend-backend.html" class="nav-link">
+          Frontend & Backend
+        </a>
+
+        <a href="mobile.html" class="nav-link">
+          Mobile Developer
+        </a>
+
+        <a href="achievements.html" class="nav-link">
+          Student+ «Жетістіктері»
+        </a>
+
+        <a href="ai-about.html" class="nav-link">
+          Student+ AI
+        </a>
+
+        <a href="ai.html" class="ai-button active-ai">
+          <span class="online-dot"></span>
+          Student+ AI
+        </a>
+
+      </nav>
+
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Мәзір"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- ================= AI APP ================= -->
+
+  <main class="ai-app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="ai-sidebar" id="aiSidebar">
+
+      <div class="sidebar-top">
+
+        <div class="ai-brand">
+
+          <div class="ai-brand-icon">
+            S+
+          </div>
+
+          <div>
+            <strong>Student+ AI</strong>
+
+            <span>
+              <i></i>
+              Online
+            </span>
+          </div>
+
+        </div>
+
+        <button
+          class="new-chat-btn"
+          id="newChatBtn"
+          type="button"
+        >
+          <span>+</span>
+          Жаңа чат
+        </button>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <div class="chat-search">
+
+        <span>⌕</span>
+
+        <input
+          id="chatSearch"
+          type="text"
+          placeholder="Чаттарды іздеу..."
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <!-- CHAT LIST -->
+
+      <div class="chat-list-wrapper">
+
+        <div class="sidebar-title">
+          <span>Чаттар</span>
+          <span id="chatCount">0</span>
+        </div>
+
+        <div
+          class="chat-list"
+          id="chatList"
+        >
+        </div>
+
+        <div
+          class="empty-chats"
+          id="emptyChats"
+        >
+          <div class="empty-icon">💬</div>
+
+          <strong>Чаттар жоқ</strong>
+
+          <span>
+            Жаңа чат бастап көріңіз
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- SIDEBAR BOTTOM -->
+
+      <div class="sidebar-bottom">
+
+        <a href="ai-about.html" class="sidebar-info">
+          <span>✦</span>
+
+          <div>
+            <strong>Student+ AI туралы</strong>
+            <small>AI мүмкіндіктерін көру</small>
+          </div>
+
+          <b>›</b>
+        </a>
+
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN CHAT -->
+
+    <section class="chat-area">
+
+      <!-- CHAT HEADER -->
+
+      <div class="chat-header">
+
+        <div class="chat-header-left">
+
+          <button
+            class="mobile-sidebar-btn"
+            id="sidebarOpenBtn"
+            type="button"
+          >
+            ☰
+          </button>
+
+          <div class="chat-avatar">
+            S+
+          </div>
+
+          <div>
+
+            <h1 id="currentChatTitle">
+              Student+ AI
+            </h1>
+
+            <span class="chat-status">
+              <i></i>
+              GPT AI ассистент
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="chat-header-actions">
+
+          <button
+            id="clearChatBtn"
+            class="header-icon-btn"
+            type="button"
+            title="Чатты өшіру"
+          >
+            🗑
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- MESSAGES -->
+
+      <div
+        class="messages-container"
+        id="messagesContainer"
+      >
+
+        <!-- WELCOME -->
+
+        <div
+          class="welcome-screen"
+          id="welcomeScreen"
+        >
+
+          <div class="welcome-logo">
+            S+
+          </div>
+
+          <h2>
+            Сәлем! Мен — Student+ AI
+          </h2>
+
+          <p>
+            Бағдарламалау, оқу, код және түрлі
+            тапсырмалар бойынша көмектесуге дайынмын.
+          </p>
+
+
+          <div class="suggestion-grid">
+
+            <button
+              class="suggestion-card"
+              data-message="HTML және CSS-ті үйренуді неден бастауға болады?"
+            >
+              <span>🌐</span>
+              <strong>Web әзірлеу</strong>
+              <small>HTML, CSS және JavaScript</small>
+            </button>
+
+            <button
+              class="suggestion-card"
+              data-message="Python тілін үйренуге арналған қарапайым жоспар құрып бер."
+            >
+              <span>🐍</span>
+              <strong>Python</strong>
+              <small>Python үйрену жоспары</small>
+            </button>
+
+            <button
+              class="suggestion-card"
+              data-message="Маған осы кодты түсіндіріп бер."
+            >
+              <span>💻</span>
+              <strong>Кодты түсіндіру</strong>
+              <small>Кодтағы қателерді табу</small>
+            </button>
+
+            <button
+              class="suggestion-card"
+              data-message="Бағдарламалау бойынша қызықты жоба идеяларын ұсын."
+            >
+              <span>💡</span>
+              <strong>Жоба идеясы</strong>
+              <small>Жаңа IT идеялар</small>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- REAL MESSAGES -->
+
+        <div
+          class="messages"
+          id="messages"
+        ></div>
+
+
+        <!-- TYPING -->
+
+        <div
+          class="typing-message hidden"
+          id="typingIndicator"
+        >
+
+          <div class="message-avatar">
+            S+
+          </div>
+
+          <div class="typing-bubble">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- IMAGE PREVIEW -->
+
+      <div
+        class="attachment-preview hidden"
+        id="attachmentPreview"
+      >
+
+        <div class="preview-image-wrapper">
+
+          <img
+            id="previewImage"
+            src=""
+            alt="Жүктелген сурет"
+          >
+
+          <button
+            id="removeImageBtn"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- COMPOSER -->
+
+      <div class="composer-area">
+
+        <form
+          class="composer"
+          id="chatForm"
+        >
+
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            hidden
+          >
+
+          <button
+            class="attach-btn"
+            id="attachBtn"
+            type="button"
+            title="Сурет қосу"
+          >
+            📎
+          </button>
+
+          <textarea
+            id="messageInput"
+            rows="1"
+            placeholder="Student+ AI-ға хабарлама жазыңыз..."
+            autocomplete="off"
+          ></textarea>
+
+          <button
+            class="send-btn"
+            id="sendBtn"
+            type="submit"
+            title="Жіберу"
+          >
+            ↑
+          </button>
+
+        </form>
+
+        <div class="composer-hint">
+          Enter — жіберу · Shift + Enter — жаңа жол
+        </div>
+
+        <p class="ai-disclaimer">
+          Student+ AI қателесуі мүмкін. Маңызды ақпаратты тексеріп алыңыз.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- MOBILE SIDEBAR OVERLAY -->
+
+  <div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+  ></div>
+
+
+  <script src="../js/ai.js"></script>
+
+</body>
+</html>
