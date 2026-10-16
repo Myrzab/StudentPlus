@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { getStore } from "@netlify/blobs";
 import crypto from "node:crypto";
+import { createBlobRateLimiter } from "../../js/rate-limiter.mjs";
 
 /*
 ==================================================
@@ -38,6 +39,10 @@ NETLIFY BLOBS
 */
 
 const chatStore = getStore("studentplus-chats");
+const rateLimitStore = getStore("studentplus-rate-limits", {
+  consistency: "strong",
+});
+const checkRateLimit = createBlobRateLimiter(rateLimitStore);
 
 
 /*
@@ -46,12 +51,13 @@ JSON RESPONSE
 ==================================================
 */
 
-function json(data, status = 200) {
+function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
+      ...extraHeaders,
     },
   });
 }
@@ -243,6 +249,46 @@ export default async function handler(req) {
 
   const url = new URL(req.url);
 
+  const ip =
+    req.headers.get("x-nf-client-connection-ip") ||
+    req.headers.get("x-forwarded-for")?.split(",")[0].trim();
+
+  if (!ip) {
+    return json(
+      {
+        success: false,
+        error: "Unable to determine client IP address.",
+      },
+      503
+    );
+  }
+
+  let rateLimitResult;
+
+  try {
+    rateLimitResult = await checkRateLimit(ip);
+  } catch (error) {
+    console.error("Rate limiter error:", error);
+
+    return json(
+      {
+        success: false,
+        error: "Rate limiter is unavailable.",
+      },
+      503
+    );
+  }
+
+  if (!rateLimitResult.allowed) {
+    return json(
+      {
+        success: false,
+        error: "Too many requests. Please try again after the cooldown.",
+      },
+      429,
+      { "Retry-After": String(rateLimitResult.retryAfterSeconds) }
+    );
+  }
 
   try {
 

@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
+import { createMemoryRateLimiter } from "../js/rate-limiter.mjs";
 
 dotenv.config();
 
@@ -39,8 +40,31 @@ if (!fs.existsSync(CHATS_FILE)) {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const checkRateLimit = createMemoryRateLimiter();
 
 app.use(cors());
+
+app.use((req, res, next) => {
+  try {
+    const result = checkRateLimit(req.ip);
+
+    if (!result.allowed) {
+      return res
+        .status(429)
+        .set("Retry-After", String(result.retryAfterSeconds))
+        .json({
+          error: "Too many requests. Please try again after the cooldown.",
+        });
+    }
+
+    next();
+  } catch (error) {
+    console.error("Rate limiter error:", error);
+    res.status(503).json({
+      error: "Rate limiter is unavailable.",
+    });
+  }
+});
 
 app.use(
   express.json({
