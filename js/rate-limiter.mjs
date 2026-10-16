@@ -1,8 +1,7 @@
 import { createHash } from "node:crypto";
 
-export const RATE_LIMIT_WINDOW_MS = 1_000;
-export const RATE_LIMIT_MAX_REQUESTS = 2;
-export const RATE_LIMIT_COOLDOWN_MS = 60 * 60 * 1_000;
+export const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1_000;
+export const RATE_LIMIT_MAX_REQUESTS = 10;
 
 export function evaluateRateLimit(state, now = Date.now()) {
   if (state?.blockedUntil > now) {
@@ -18,12 +17,12 @@ export function evaluateRateLimit(state, now = Date.now()) {
   );
 
   if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
-    const blockedUntil = now + RATE_LIMIT_COOLDOWN_MS;
-
     return {
       allowed: false,
-      retryAfterSeconds: RATE_LIMIT_COOLDOWN_MS / 1_000,
-      state: { timestamps: [], blockedUntil },
+      retryAfterSeconds: Math.ceil(
+        (timestamps[0] + RATE_LIMIT_WINDOW_MS - now) / 1_000
+      ),
+      state: { timestamps, blockedUntil: 0 },
     };
   }
 
@@ -45,7 +44,7 @@ export function createMemoryRateLimiter() {
       throw new Error("A client IP address is required for rate limiting.");
     }
 
-    if (now - lastPrunedAt >= RATE_LIMIT_COOLDOWN_MS) {
+    if (now - lastPrunedAt >= RATE_LIMIT_WINDOW_MS) {
       for (const [clientIp, state] of clients) {
         const isBlocked = state.blockedUntil > now;
         const hasRecentRequests = state.timestamps.some(
@@ -74,11 +73,11 @@ export function createBlobRateLimiter(store) {
 
     const key = createHash("sha256").update(ip).digest("hex");
 
-    for (let attempt = 0; attempt < 10; attempt += 1) {
+    for (let attempt = 0; attempt < 100; attempt += 1) {
       const current = await store.getWithMetadata(key, { type: "json" });
       const result = evaluateRateLimit(current?.data, now);
 
-      if (!result.allowed && result.state === current?.data) {
+      if (!result.allowed && current) {
         return result;
       }
 
